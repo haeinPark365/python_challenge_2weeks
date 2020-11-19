@@ -31,7 +31,7 @@ def get_from_dict(dic, word=''):
     print(f"{word} : {dic[word]}")
   else :
     print(f"{word} not was found in this dict.")
-  pass
+  pass 
 
 def update_word(dic, word='', mean=''):
   if type(dic) is not dict:
