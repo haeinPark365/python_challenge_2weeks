@@ -12,50 +12,54 @@ There should be NO ERRORS from Python in the console.
 
 def add_to_dict(dic, word='', mean=''):
   if type(dic) is not dict:
-    print(f"You need to send a dictionary. You sent : {type(dic)}")
+    print("You need to send a dictionary. You sent : ", type(dic))
   elif word == '' or mean == '':
     print("You need to send a word and a definition.")
-  elif word in dic :
-    print(f"{word} is already on the dictionary. Won't add.")
   else :
-    dic[word] = mean
-    print(f"{word} has been added")
-  pass
+    if word in dic :
+      print(f"{word} is already on the dictionary. Won't add.")
+    else :
+      dic[word] = mean
+      print(word," has been added")
+  
 
 def get_from_dict(dic, word=''):
   if type(dic) is not dict:
     print(f"You need to send a dictionary. You sent : {type(dic)}")
   elif word == '':
     print("You need to send a word to search for.")
-  elif word in dic :
-    print(f"{word} : {dic[word]}")
-  else :
-    print(f"{word} not was found in this dict.")
-  pass 
+  else:
+    if word in dic :
+      print(f"{word} : {dic[word]}")
+    else :
+      print(f"{word} not was found in this dict.")
+  
 
 def update_word(dic, word='', mean=''):
   if type(dic) is not dict:
     print(f"You need to send a dictionary. You sent : {type(dic)}")
   elif word == '' or mean == '':
     print("You need to send a word and a definition to update.")
-  elif word in dic :
-    dic[word] = mean
-    print(f"{word} has been updated to : {mean}")
-  else :
-    print(f"{word} is not on the dict. Can't update non-existing word.")
-  pass
+  else:
+    if word in dic :
+      dic[word] = mean
+      print(f"{word} has been updated to : {mean}")
+    else :
+      print(f"{word} is not on the dict. Can't update non-existing word.")
+  
 
 def delete_from_dict(dic, word=''):
   if type(dic) is not dict:
     print(f"You need to send a dictionary. You sent : {type(dic)}")
   elif word == '':
     print("You need to specify a word to delete.")
-  elif word in dic :
-    del dic[word]
-    print(f"{word} has been deleted.")
-  else :
-    print(f"{word} is not in this dict. Won't delete")
-  pass
+  else:
+    if word in dic :
+      del dic[word]
+      print(f"{word} has been deleted.")
+    else :
+      print(f"{word} is not in this dict. Won't delete")
+  
 
 # \/\/\/\/\/\/\ DO NOT TOUCH  \/\/\/\/\/\/\
 
