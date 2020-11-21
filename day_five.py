@@ -5,59 +5,52 @@ from bs4 import BeautifulSoup
 os.system("clear")
 url = "https://www.iban.com/currency-codes"
 
+countries = []
+
 def run_day_five():
   print("Hello! please choose select a county by number!")
 
   request = requests.get(url)
   soup = BeautifulSoup(request.text, "html.parser")
-  table = soup.find("table",{"class":"table table-bordered downloads tablesorter"}).find("tbody")
-  tr = table.find_all("tr")
+  table = soup.find("table")
+  rows = table.find_all("tr")[1:]
 
-  lis = get_list(tr)
-  get_num(lis)
+  get_list(rows)
+
+  for index, country in enumerate(countries):
+    print(f"# {index} {country['name']} ")
+    
+  get_num()
   return 
   
     
-def get_list(tr):
-  lis = []
-  for r in tr:
-    d = r.find_all("td")
-    li=[]
-    for i in range(len(d)):
-      if(i==1 or i==3):
-        continue
-
-      s = str(d[i]).replace("<td>","").replace("</td>","")
-      if s != '':
-        li.append(s)
-      else:
-        continue
+def get_list(rows):
+  for row in rows:
+    items = row.find_all("td")
+    name = items[0].text
+    code = items[2].text
     
-    lis.append(li)
-    for i in range(len(lis)):
-      if len(lis[i]) != 2:
-        del lis[i]
-  
-  for index, value in enumerate(lis):
-    print(f"# {index} {value[0]} ")
-
-  return lis
+    if(name and code):
+      country = {
+        'name': name.capitalize(),
+        'code': code
+      }
+      countries.append(country)
 
 
-def get_num(lis):
-  answer = input("#: ")
+def get_num():
   try:
-    answer = int(answer)
-  except:
-    pass
-  if type(answer) == int:
-    if answer>=0 and answer<len(lis):
-      print(f"The currency code is {lis[answer][1]}")
-    else:
+    answer = int(input("#: "))
+    if answer > len(countries):
       print("Choose a number form the list")
-      get_num(lis)
-  else:
+      get_num()
+    else :
+      country = countries[answer]
+      print(f"The currency code is {country['code']}")
+
+  except:
     print("That was'nt a number")
-    get_num(lis)
+    get_num()
+  
 
 
