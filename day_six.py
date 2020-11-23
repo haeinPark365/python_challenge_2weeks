@@ -14,8 +14,14 @@ url_exchange = "https://transferwise.com/gb/currency-converter"
 
 countries = []
 
-def get_countries():
+
+def run_day_six():
   print("Welcome to CurrencyConvert PRO 2020")
+  input_li = get_countries()
+  exchange(input_li)
+
+
+def get_countries():
 
   request = requests.get(url_country)
   soup = BeautifulSoup(request.text, "html.parser")
@@ -28,25 +34,14 @@ def get_countries():
     print(f"# {index} {country['name']} ")
     
 
-  print("\nWhere are you from? Choose a county by number!")
-  first = get_ask()
+  first = ask_country("\nWhere are you from? Choose a county by number!")
+  second = ask_country("\nNow choose another country.") 
 
-  print("\nNow choose another country.")
-  second = get_ask()
+  first_code = first['code']
+  second_code = second['code']
+  input_amount = ask_amount(first_code, second_code)
 
-  print(f"\nHow many {first} do you want to convert to {second}?")
-  num = ''
-  while type(num) != int:
-    num = get_num()
-  input_amount = num
-
-  input_li = {
-    'first' : first,
-    'second' : second,
-    'input_amount' : input_amount
-  }
-
-  return input_li
+  return first_code, second_code, input_amount
   
     
 def get_list(rows):
@@ -63,49 +58,46 @@ def get_list(rows):
       countries.append(country)
 
 
-def get_ask():
+def ask_country(text):
+  print(text)
   try:
     answer = int(input("#: "))
     if answer > len(countries):
       print("Choose a number form the list")
-      get_ask()
+      return ask_country(text)
     else :
-      country = countries[answer]
-      print(country['name'])
-      answer = country['code']
-
+      print(countries[answer]['name'])
+      return countries[answer]
   except:
     print("That was'nt a number")
-    get_ask()
-  
-  return answer
+    return ask_country(text)
 
-def get_num():
-  amount = input()
+
+def ask_amount(first, second):
+  print(f"\nHow many {first} do you want to convert to {second}?")
   try:
-    amount=int(amount)
+    amount = int(input())
+    return amount
   except:
     print("That was'nt a number")
-  
-  return amount
+    return ask_amount(first, second)
   
   
 
 def exchange(li):
-
-  first = li['first']
-  second = li['second']
-  input_amount = li['input_amount']
+  first = li[0]
+  second = li[1]
+  input_amount = li[2]
   
-
   request = requests.get(f"{url_exchange}/{first}-to-{second}-rate?amount={input_amount}")
   soup = BeautifulSoup(request.text, "html.parser")
   result = float(soup.find("span",{"class":"text-success"}).text)
   amount = float(input_amount) * result
 
-  print(f"\n{first} {input_amount} is ", end='')
-  print(format_currency(amount, second, locale="ko_KR"))
+  first_amount = format_currency(input_amount, first, locale="ko_KR")
+  second_amount = format_currency(amount, second, locale="ko_KR")
 
-def run_day_six():
-  ex_li = get_countries()
-  exchange(ex_li)
+  print(f"\n{first_amount} is {second_amount}")
+
+
+
